@@ -12,10 +12,11 @@ if (isset($_GET['id'])) {
     $sql = "DELETE FROM parts WHERE id='$id'";
     
     if ($conn->query($sql) === TRUE) {
-        echo "Part deleted successfully";
+        echo "<div class='alert success'>Part deleted successfully</div>";
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        echo "<div class='alert error'>Error: " . $sql . "<br>" . $conn->error . "</div>";
     }
 }
 header("Location: manage_parts.php");
+exit();
 ?>

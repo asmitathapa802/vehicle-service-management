@@ -1,9 +1,17 @@
+<?php
+session_start();
+if (!isset($_SESSION['admin_logged_in'])) {
+    header("Location: admin_login.php");
+    exit;
+}
+
+include '../db_config.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Public Dashboard - Vehicle Service Management</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Admin Dashboard - Vehicle Service Management</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -72,7 +80,6 @@
             background-color: #ddd;
             color: black;
         }
-        /* Responsive design */
         @media (max-width: 768px) {
             .card {
                 width: 100%;
@@ -85,6 +92,7 @@
                 padding-left: 20px;
             }
         }
+
         @media (max-width: 480px) {
             .card {
                 padding: 10px;
@@ -99,29 +107,27 @@
 </head>
 <body>
     <header>
-        <h1>Public Dashboard</h1>
+        <h1>Admin Dashboard</h1>
     </header>
     <nav>
-        <a href="index.php">Home</a>
-        <a href="services.php">Services</a>
-        <a href="about.php">About Us</a>
-        <a href="contact.php">Contact</a>
+        <a href="admin_dashboard.php">Dashboard</a>
+        <a href="manage_parts.php">Manage Parts</a>
     </nav>
     <div class="container">
         <div class="card">
-            <h3>Our Services</h3>
-            <p>Learn more about the services we offer.</p>
-            <button onclick="window.location.href='services.php'">View Services</button>
+            <h3>Manage Parts</h3>
+            <p>View, add, and update motorbike parts.</p>
+            <button onclick="window.location.href='manage_parts.php'">Go to Manage Parts</button>
         </div>
         <div class="card">
-            <h3>Book a Service</h3>
-            <p>Schedule an appointment for your vehicle.</p>
-            <button onclick="window.location.href='book_service.php'">Book Now</button>
+            <h3>View Users</h3>
+            <p>View and manage registered users.</p>
+            <button onclick="window.location.href='view_users.php'">Go to Users</button>
         </div>
         <div class="card">
-            <h3>Customer Reviews</h3>
-            <p>Read what our customers have to say about us.</p>
-            <button onclick="window.location.href='reviews.php'">Read Reviews</button>
+            <h3>Service Bookings</h3>
+            <p>View and manage service bookings.</p>
+            <button onclick="window.location.href='service_bookings.php'">Go to Bookings</button>
         </div>
         <!-- Add more cards as needed -->
     </div>

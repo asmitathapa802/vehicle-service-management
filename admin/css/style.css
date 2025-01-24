@@ -23,10 +23,20 @@ h1 {
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
+/* Styles for toggling form visibility */
+#addPartForm {
+    display: none; /* Form is hidden by default */
+}
 
+#addPartForm.visible {
+    display: block; /* Form is shown when the 'visible' class is added */
+}
+
+/* Style for tables */
 table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 20px;
 }
 
 table, th, td {
@@ -43,14 +53,122 @@ th {
     color: white;
 }
 
+/* Style for buttons */
 button {
     padding: 10px 15px;
     background-color: #333;
     color: #fff;
     border: none;
     cursor: pointer;
+    margin-top: 10px;
+    border-radius: 5px; /* Added rounded corners */
+    transition: background-color 0.3s; /* Smooth transition */
 }
 
 button:hover {
     background-color: #555;
+}
+
+/* Form group styles */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input, .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ddd; /* Added border for inputs */
+    border-radius: 5px; /* Rounded corners for inputs */
+}
+
+/* Alert styles */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-align: center; /* Centered text */
+}
+
+.alert.success {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.alert.error {
+    background-color: #f44336;
+    color: white;
+}
+
+/* Navigation bar styles */
+nav {
+    background-color: #333;
+    overflow: hidden;
+}
+
+nav a {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+nav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px; /* Reduce padding on smaller screens */
+    }
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+    th {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+    tr {
+        margin: 0 0 1rem 0;
+    }
+    tr:nth-child(odd) {
+        background: #f4f4f4;
+    }
+    td {
+        border: none;
+        position: relative;
+        padding-left: 50%;
+        white-space: normal;
+        text-align: left;
+    }
+    td:before {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        content: attr(data-label);
+        font-weight: bold;
+    }
+}
+
+@media (max-width: 480px) {
+    button {
+        width: 100%; /* Full-width buttons on small screens */
+        padding: 8px;
+    }
+    .form-group input, .form-group textarea {
+        padding: 8px; /* Reduce padding in inputs for smaller screens */
+    }
 }

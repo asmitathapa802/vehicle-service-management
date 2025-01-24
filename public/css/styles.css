@@ -1,3 +1,4 @@
+/* Body and basic styling */
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
@@ -24,9 +25,11 @@ h1 {
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
+/* Table styling */
 table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 20px;
 }
 
 table, th, td {
@@ -43,14 +46,80 @@ th {
     color: white;
 }
 
+/* Button styling */
 button {
     padding: 10px 15px;
     background-color: #333;
     color: #fff;
     border: none;
     cursor: pointer;
+    margin-top: 10px;
+    border-radius: 5px; /* Added rounded corners */
+    transition: background-color 0.3s; /* Smooth transition */
 }
 
 button:hover {
     background-color: #555;
+}
+
+/* Styles for toggling visibility */
+.info-section {
+    display: none;
+}
+
+.info-section.visible {
+    display: block;
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px; /* Reduced padding on smaller screens */
+    }
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+    th {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+    tr {
+        margin: 0 0 1rem 0;
+    }
+    tr:nth-child(odd) {
+        background: #f4f4f4;
+    }
+    td {
+        border: none;
+        position: relative;
+        padding-left: 50%;
+        white-space: normal;
+        text-align: left;
+    }
+    td:before {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        content: attr(data-label);
+        font-weight: bold;
+    }
+}
+
+@media (max-width: 480px) {
+    button {
+        width: 100%; /* Full-width buttons on small screens */
+        padding: 8px;
+    }
+    .form-group input, .form-group textarea {
+        padding: 8px; /* Reduced padding in inputs for smaller screens */
+    }
 }
