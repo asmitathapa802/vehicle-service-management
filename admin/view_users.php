@@ -31,14 +31,14 @@ $users = $result->fetch_all(MYSQLI_ASSOC);
         <a href="logout.php">Logout</a>
     </nav>
     <div class="container">
-        <h2>Existing Users</h2>
+        <h2>All Users</h2>
         <table>
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Username</th>
                     <th>Email</th>
-                    <th>Created At</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -47,7 +47,9 @@ $users = $result->fetch_all(MYSQLI_ASSOC);
                         <td><?php echo htmlspecialchars($user['id']); ?></td>
                         <td><?php echo htmlspecialchars($user['username']); ?></td>
                         <td><?php echo htmlspecialchars($user['email']); ?></td>
-                        <td><?php echo htmlspecialchars($user['created_at']); ?></td>
+                        <td>
+                            <a href="delete_user.php?id=<?php echo $user['id']; ?>" class="delete-item">Delete</a>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

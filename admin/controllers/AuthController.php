@@ -27,7 +27,7 @@ class AuthController {
             $stmt->bind_result($id, $stored_password);
             $stmt->fetch();
 
-            if ($password === $stored_password) {
+            if (password_verify($password, $stored_password)) {
                 if (session_status() == PHP_SESSION_NONE) {
                     session_start();
                 }
@@ -46,11 +46,11 @@ class AuthController {
     }
 
     public function logout() {
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
+        session_start();
         session_unset();
         session_destroy();
+        header('Location: ../auth/admin_login.php');
+        exit();
     }
 
     private function sanitizeInput($input) {

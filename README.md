@@ -1,27 +1,29 @@
 # Vehicle Service Management
 
-Vehicle Service Management is a web application that allows users to manage vehicle service bookings. It includes an admin module for managing parts and users, and a user module for booking services.
+Vehicle Service Management is a web application for managing vehicle service bookings, parts, and users.
 
 ## Features
 
-- User registration and login
-- Admin dashboard for managing parts and users
-- User dashboard for managing service bookings
-- Responsive design
+- User registration and authentication
+- Admin management
+- Service booking management
+- Parts management
 
-## Technologies Used
+## Setup
 
-- PHP
-- MySQL/MariaDB
-- HTML/CSS
-- JavaScript
+### Prerequisites
 
-## Installation
+- PHP 7.4 or higher
+- MySQL
+- Composer
+
+### Installation
 
 1. Clone the repository:
-    ```sh
-    git clone https://github.com/asmitathapa802/vehicle-service-management.git
-    ```
+
+   ```sh
+   git clone https://github.com/asmitathapa802/vehicle-service-management.git
+   ```
 
 2. Navigate to the project directory:
     ```sh

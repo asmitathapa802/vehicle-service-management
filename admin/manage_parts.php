@@ -5,23 +5,29 @@ if (!isset($_SESSION['admin_logged_in'])) {
     exit();
 }
 
-require_once __DIR__ . '/../db_config.php';
+require_once __DIR__ . '/../../db_config.php';
 
-// Handle form submission for adding a new part
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_part'])) {
     $part_name = htmlspecialchars(strip_tags(trim($_POST['part_name'])));
     $description = htmlspecialchars(strip_tags(trim($_POST['description'])));
     $price = htmlspecialchars(strip_tags(trim($_POST['price'])));
 
     $stmt = $conn->prepare("INSERT INTO parts (part_name, description, price) VALUES (?, ?, ?)");
-    $stmt->bind_param("ssd", $part_name, $description, $price);
-    $stmt->execute();
-    $stmt->close();
+    if ($stmt) {
+        $stmt->bind_param("ssd", $part_name, $description, $price);
+        $stmt->execute();
+        $stmt->close();
+    } else {
+        error_log("Prepare failed: (" . $conn->errno . ") " . $conn->error);
+    }
 }
 
-// Fetch all parts
+$parts = [];
 $result = $conn->query("SELECT * FROM parts");
-$parts = $result->fetch_all(MYSQLI_ASSOC);
+if ($result) {
+    $parts = $result->fetch_all(MYSQLI_ASSOC);
+    $result->free();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,7 +35,6 @@ $parts = $result->fetch_all(MYSQLI_ASSOC);
     <meta charset="UTF-8">
     <title>Manage Parts - Vehicle Service Management</title>
     <link rel="stylesheet" href="css/admin_styles.css">
-    <script src="js/admin_scripts.js" defer></script>
 </head>
 <body>
     <header>
@@ -61,6 +66,7 @@ $parts = $result->fetch_all(MYSQLI_ASSOC);
                     <th>Part Name</th>
                     <th>Description</th>
                     <th>Price</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -70,6 +76,9 @@ $parts = $result->fetch_all(MYSQLI_ASSOC);
                         <td><?php echo htmlspecialchars($part['part_name']); ?></td>
                         <td><?php echo htmlspecialchars($part['description']); ?></td>
                         <td><?php echo htmlspecialchars($part['price']); ?></td>
+                        <td>
+                            <a href="delete_part.php?id=<?php echo $part['id']; ?>" class="delete-item">Delete</a>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

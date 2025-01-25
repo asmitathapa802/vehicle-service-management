@@ -7,13 +7,16 @@ if (!isset($_SESSION['user_logged_in'])) {
 
 require_once __DIR__ . '/../../../db_config.php';
 
-// Fetch service bookings for the logged-in user
+// Fetch user-specific service bookings
 $user_id = $_SESSION['user_id'];
-$stmt = $conn->prepare("SELECT * FROM service_bookings WHERE user_id = ?");
+$bookings = [];
+$stmt = $conn->prepare("SELECT id, vehicle, status, created_at FROM service_bookings WHERE user_id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
-$bookings = $result->fetch_all(MYSQLI_ASSOC);
+while ($row = $result->fetch_assoc()) {
+    $bookings[] = $row;
+}
 $stmt->close();
 ?>
 <!DOCTYPE html>

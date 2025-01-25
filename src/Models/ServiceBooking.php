@@ -19,7 +19,6 @@ class ServiceBooking {
             error_log("Prepare failed: (" . $this->conn->errno . ") " . $this->conn->error);
             return false;
         }
-
         $stmt->bind_param("iss", $user_id, $vehicle, $status);
         $stmt->execute();
         $stmt->close();
@@ -41,6 +40,52 @@ class ServiceBooking {
         $bookings = $result->fetch_all(MYSQLI_ASSOC);
         $stmt->close();
         return $bookings;
+    }
+
+    public function readAll() {
+        $result = $this->conn->query("SELECT * FROM service_bookings");
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function read($id) {
+        $stmt = $this->conn->prepare("SELECT * FROM service_bookings WHERE id = ?");
+        if (!$stmt) {
+            error_log("Prepare failed: (" . $this->conn->errno . ") " . $this->conn->error);
+            return false;
+        }
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $booking = $result->fetch_assoc();
+        $stmt->close();
+        return $booking;
+    }
+
+    public function update($id, $vehicle, $status) {
+        $vehicle = $this->sanitizeInput($vehicle);
+        $status = $this->sanitizeInput($status);
+
+        $stmt = $this->conn->prepare("UPDATE service_bookings SET vehicle = ?, status = ? WHERE id = ?");
+        if (!$stmt) {
+            error_log("Prepare failed: (" . $this->conn->errno . ") " . $this->conn->error);
+            return false;
+        }
+        $stmt->bind_param("ssi", $vehicle, $status, $id);
+        $stmt->execute();
+        $stmt->close();
+        return true;
+    }
+
+    public function delete($id) {
+        $stmt = $this->conn->prepare("DELETE FROM service_bookings WHERE id = ?");
+        if (!$stmt) {
+            error_log("Prepare failed: (" . $this->conn->errno . ") " . $this->conn->error);
+            return false;
+        }
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $stmt->close();
+        return true;
     }
 
     private function sanitizeInput($input) {

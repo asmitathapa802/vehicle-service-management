@@ -27,6 +27,13 @@ nav a {
     color: #fff;
     margin: 0 15px;
     text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+nav a:hover {
+    background-color: #555;
 }
 
 .container {
@@ -40,33 +47,23 @@ nav a {
 .main-img {
     width: 100%;
     height: auto;
-    margin-bottom: 20px;
+    border-radius: 5px;
+    margin-bottom: 15px;
 }
 
-form {
-    display: flex;
-    flex-direction: column;
+ul {
+    list-style-type: disc;
+    padding-left: 20px;
 }
 
-form label {
-    margin-top: 10px;
-}
-
-form input, form button {
-    margin-top: 5px;
-    padding: 10px;
-    font-size: 16px;
-}
-
-form button {
+footer {
     background-color: #333;
     color: #fff;
-    border: none;
-    cursor: pointer;
-}
-
-form button:hover {
-    background-color: #555;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
 }
 
 table {
@@ -91,7 +88,12 @@ th {
 /* Responsive design */
 @media (max-width: 768px) {
     .container {
-        width: 90%;
+        padding: 10px;
+    }
+
+    nav a {
+        display: block;
+        margin: 10px 0;
     }
 
     table, th, td {

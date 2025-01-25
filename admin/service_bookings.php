@@ -38,8 +38,8 @@ $bookings = $result->fetch_all(MYSQLI_ASSOC);
                     <th>ID</th>
                     <th>Username</th>
                     <th>Vehicle</th>
-                    <th>Service Date</th>
                     <th>Status</th>
+                    <th>Created At</th>
                 </tr>
             </thead>
             <tbody>
@@ -48,8 +48,8 @@ $bookings = $result->fetch_all(MYSQLI_ASSOC);
                         <td><?php echo htmlspecialchars($booking['id']); ?></td>
                         <td><?php echo htmlspecialchars($booking['username']); ?></td>
                         <td><?php echo htmlspecialchars($booking['vehicle']); ?></td>
-                        <td><?php echo htmlspecialchars($booking['service_date']); ?></td>
                         <td><?php echo htmlspecialchars($booking['status']); ?></td>
+                        <td><?php echo htmlspecialchars($booking['created_at']); ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

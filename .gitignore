@@ -1,13 +1,25 @@
-# Ignore .env file
+# Ignore environment configuration files
 .env
 
-# Ignore node_modules directory
+# Ignore database configuration files
+db_config.php
+
+# Ignore vendor directory (for Composer dependencies)
+vendor/
+
+# Ignore node_modules directory (for Node.js dependencies)
 node_modules/
 
-# Ignore log files and databases
+# Ignore log files
 *.log
-*.sql
-*.sqlite
+
+# Ignore temporary files
+*.tmp
+*.temp
+
+# Ignore IDE specific files
+.vscode/
+.idea/
 
 # Ignore system files
 .DS_Store

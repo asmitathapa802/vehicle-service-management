@@ -14,15 +14,33 @@ class UserAuthController {
         $password = $this->sanitizeInput($password);
         $email = $this->sanitizeInput($email);
 
+        // Check if username or email already exists
+        $stmt = $this->conn->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
+        if (!$stmt) {
+            error_log("Prepare failed: (" . $this->conn->errno . ") " . $this->conn->error);
+            return false;
+        }
+        $stmt->bind_param("ss", $username, $email);
+        $stmt->execute();
+        $stmt->store_result();
+
+        if ($stmt->num_rows > 0) {
+            $stmt->close();
+            return false; // Username or email already exists
+        }
+        $stmt->close();
+
+        // Insert new user
         $stmt = $this->conn->prepare("INSERT INTO users (username, password, email) VALUES (?, ?, ?)");
         if (!$stmt) {
             error_log("Prepare failed: (" . $this->conn->errno . ") " . $this->conn->error);
             return false;
         }
-
-        $stmt->bind_param("sss", $username, $password, $email);
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $stmt->bind_param("sss", $username, $hashed_password, $email);
         $stmt->execute();
         $stmt->close();
+
         return true;
     }
 
