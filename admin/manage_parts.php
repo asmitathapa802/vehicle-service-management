@@ -1,37 +1,35 @@
 <?php
 session_start();
 if (!isset($_SESSION['admin_logged_in'])) {
-    header("Location: admin_login.php");
-    exit;
+    header('Location: admin_login.php');
+    exit();
 }
 
-include '../db_config.php';
+require_once __DIR__ . '/../db_config.php';
 
-// Add part
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] == 'create') {
-    $part_name = $_POST['part_name'];
-    $description = $_POST['description'];
-    $price = $_POST['price'];
-    
-    $sql = "INSERT INTO parts (part_name, description, price) VALUES ('$part_name', '$description', '$price')";
-    
-    if ($conn->query($sql) === TRUE) {
-        echo "<div class='alert success'>New part added successfully</div>";
-    } else {
-        echo "<div class='alert error'>Error: " . $sql . "<br>" . $conn->error . "</div>";
-    }
+// Handle form submission for adding a new part
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_part'])) {
+    $part_name = htmlspecialchars(strip_tags(trim($_POST['part_name'])));
+    $description = htmlspecialchars(strip_tags(trim($_POST['description'])));
+    $price = htmlspecialchars(strip_tags(trim($_POST['price'])));
+
+    $stmt = $conn->prepare("INSERT INTO parts (part_name, description, price) VALUES (?, ?, ?)");
+    $stmt->bind_param("ssd", $part_name, $description, $price);
+    $stmt->execute();
+    $stmt->close();
 }
 
-// Fetch parts
-$sql = "SELECT * FROM parts";
-$result = $conn->query($sql);
+// Fetch all parts
+$result = $conn->query("SELECT * FROM parts");
+$parts = $result->fetch_all(MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Manage Parts - Vehicle Service Management</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/admin_styles.css">
+    <script src="js/admin_scripts.js" defer></script>
 </head>
 <body>
     <header>
@@ -45,58 +43,37 @@ $result = $conn->query($sql);
         <a href="logout.php">Logout</a>
     </nav>
     <div class="container">
-        <button id="toggleButton" class="btn btn-primary">Add New Part</button>
-        <div id="addPartForm" class="form-group">
-            <form method="post" action="">
-                <input type="hidden" name="action" value="create">
-                <div class="form-group">
-                    <label for="part_name">Part Name:</label>
-                    <input type="text" id="part_name" name="part_name" required>
-                </div>
-                <div class="form-group">
-                    <label for="description">Description:</label>
-                    <textarea id="description" name="description" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="price">Price:</label>
-                    <input type="text" id="price" name="price" required>
-                </div>
-                <button type="submit" class="btn btn-success">Add Part</button>
-            </form>
-        </div>
-        <div>
-            <?php if ($result->num_rows > 0) { ?>
-                <table class="table table-striped table-bordered mt-4">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th>ID</th>
-                            <th>Part Name</th>
-                            <th>Description</th>
-                            <th>Price</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php while ($row = $result->fetch_assoc()) { ?>
-                            <tr>
-                                <td data-label="ID"><?php echo $row['id']; ?></td>
-                                <td data-label="Part Name"><?php echo $row['part_name']; ?></td>
-                                <td data-label="Description"><?php echo $row['description']; ?></td>
-                                <td data-label="Price"><?php echo $row['price']; ?></td>
-                                <td data-label="Actions">
-                                    <a href="edit_part.php?id=<?php echo $row['id']; ?>" class="btn btn-warning btn-sm">Edit</a>
-                                    <a href="delete_part.php?id=<?php echo $row['id']; ?>" class="btn btn-danger btn-sm delete-link">Delete</a>
-                                </td>
-                            </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
-            <?php } else { ?>
-                <p>No parts available</p>
-            <?php } ?>
-        </div>
+        <h2>Add New Part</h2>
+        <form method="POST" action="manage_parts.php">
+            <label for="part_name">Part Name:</label>
+            <input type="text" id="part_name" name="part_name" required>
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" required></textarea>
+            <label for="price">Price:</label>
+            <input type="number" step="0.01" id="price" name="price" required>
+            <button type="submit" name="add_part">Add Part</button>
+        </form>
+        <h2>Existing Parts</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Part Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($parts as $part): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($part['id']); ?></td>
+                        <td><?php echo htmlspecialchars($part['part_name']); ?></td>
+                        <td><?php echo htmlspecialchars($part['description']); ?></td>
+                        <td><?php echo htmlspecialchars($part['price']); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
     </div>
-    <script src="js/script.js"></script>
 </body>
 </html>
-

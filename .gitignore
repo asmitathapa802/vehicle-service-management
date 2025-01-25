@@ -1,53 +1,14 @@
+# Ignore .env file
+.env
+
 # Ignore node_modules directory
 node_modules/
 
-# Ignore log files and directories
-logs/
+# Ignore log files and databases
 *.log
+*.sql
+*.sqlite
 
-# Ignore temporary files
-*.tmp
-
-# Ignore compiled code
-*.class
-*.o
-*.so
-
-# Ignore operating system files
+# Ignore system files
 .DS_Store
 Thumbs.db
-
-# Ignore environment-specific configuration files
-.env
-
-# Ignore IDE/editor-specific files
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Ignore cache files
-.cache/
-*.bak
-
-# Ignore coverage files
-coverage/
-
-# Ignore build artifacts
-dist/
-build/
-
-# Ignore vendor directory (if using Composer)
-vendor/
-
-# Ignore any files that contain sensitive information
-config.php
-db_config.php
-
-# Ignore generated images
-public/images/generated/
-admin/images/generated/
-
-# Ignore other specific files and directories
-/public/css/custom_styles.css
-/admin/css/custom_styles.css
