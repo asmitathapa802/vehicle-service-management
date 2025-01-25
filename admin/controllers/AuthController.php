@@ -27,7 +27,7 @@ class AuthController {
             $stmt->bind_result($id, $stored_password);
             $stmt->fetch();
 
-            if (password_verify($password, $stored_password)) {
+            if ($password === $stored_password) { // Plain text password comparison
                 if (session_status() == PHP_SESSION_NONE) {
                     session_start();
                 }
