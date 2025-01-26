@@ -48,7 +48,7 @@ $users = $result->fetch_all(MYSQLI_ASSOC);
                         <td><?php echo htmlspecialchars($user['username']); ?></td>
                         <td><?php echo htmlspecialchars($user['email']); ?></td>
                         <td>
-                            <a href="delete_user.php?id=<?php echo $user['id']; ?>" class="delete-item">Delete</a>
+                            <a href="delete_user.php?id=<?php echo $user['id']; ?>" class="delete-item" data-item-type="user">Delete</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

@@ -18,6 +18,23 @@ while ($row = $result->fetch_assoc()) {
     $bookings[] = $row;
 }
 $stmt->close();
+
+// Handle service booking form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['book_service'])) {
+    $vehicle = htmlspecialchars(strip_tags(trim($_POST['vehicle'])));
+    $status = 'Pending';
+
+    $stmt = $conn->prepare("INSERT INTO service_bookings (user_id, vehicle, status) VALUES (?, ?, ?)");
+    if ($stmt) {
+        $stmt->bind_param("iss", $user_id, $vehicle, $status);
+        $stmt->execute();
+        $stmt->close();
+        header('Location: service_bookings.php');
+        exit();
+    } else {
+        $error = "Failed to book service. Please try again.";
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -57,6 +74,15 @@ $stmt->close();
                 <?php endforeach; ?>
             </tbody>
         </table>
+        <h2>Book a New Service</h2>
+        <form method="POST" action="service_bookings.php">
+            <label for="vehicle">Vehicle:</label>
+            <input type="text" id="vehicle" name="vehicle" required>
+            <button type="submit" name="book_service">Book Service</button>
+            <?php if (isset($error)): ?>
+                <p class="error"><?php echo htmlspecialchars($error); ?></p>
+            <?php endif; ?>
+        </form>
     </div>
 </body>
 </html>

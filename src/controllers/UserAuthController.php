@@ -30,14 +30,13 @@ class UserAuthController {
         }
         $stmt->close();
 
-        // Insert new user
+        // Insert new user with plain text password
         $stmt = $this->conn->prepare("INSERT INTO users (username, password, email) VALUES (?, ?, ?)");
         if (!$stmt) {
             error_log("Prepare failed: (" . $this->conn->errno . ") " . $this->conn->error);
             return false;
         }
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        $stmt->bind_param("sss", $username, $hashed_password, $email);
+        $stmt->bind_param("sss", $username, $password, $email);
         $stmt->execute();
         $stmt->close();
 
@@ -62,7 +61,7 @@ class UserAuthController {
             $stmt->bind_result($id, $stored_password);
             $stmt->fetch();
 
-            if ($password === $stored_password) {
+            if ($password === $stored_password) { // Plain text password comparison
                 if (session_status() == PHP_SESSION_NONE) {
                     session_start();
                 }
@@ -118,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
         header("Location: ../user/dashboard.php");
         exit;
     } else {
-        echo "Login failed. Please try again.";
+        echo "<script>alert('Login failed. Please try again.');</script>";
     }
 }
 ?>

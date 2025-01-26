@@ -51,7 +51,8 @@ document.addEventListener('DOMContentLoaded', function() {
     var deleteButtons = document.querySelectorAll('.delete-item');
     deleteButtons.forEach(function(button) {
         button.addEventListener('click', function(event) {
-            var confirmed = confirm('Are you sure you want to delete this item?');
+            var itemType = this.getAttribute('data-item-type');
+            var confirmed = confirm('Are you sure you want to delete this ' + itemType + '?');
             if (!confirmed) {
                 event.preventDefault();
             }

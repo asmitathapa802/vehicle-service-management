@@ -5,7 +5,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
     exit();
 }
 
-require_once __DIR__ . '/../../db_config.php';
+require_once __DIR__ . '/../db_config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_part'])) {
     $part_name = htmlspecialchars(strip_tags(trim($_POST['part_name'])));
@@ -17,16 +17,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_part'])) {
         $stmt->bind_param("ssd", $part_name, $description, $price);
         $stmt->execute();
         $stmt->close();
+        header('Location: manage_parts.php');
+        exit();
     } else {
-        error_log("Prepare failed: (" . $conn->errno . ") " . $conn->error);
+        $error = "Failed to add part. Please try again.";
     }
 }
 
+// Fetch all parts
 $parts = [];
 $result = $conn->query("SELECT * FROM parts");
-if ($result) {
-    $parts = $result->fetch_all(MYSQLI_ASSOC);
-    $result->free();
+while ($row = $result->fetch_assoc()) {
+    $parts[] = $row;
 }
 ?>
 <!DOCTYPE html>
@@ -34,7 +36,8 @@ if ($result) {
 <head>
     <meta charset="UTF-8">
     <title>Manage Parts - Vehicle Service Management</title>
-    <link rel="stylesheet" href="css/admin_styles.css">
+    <link rel="stylesheet" href="../css/admin_styles.css">
+    <script src="js/admin_scripts.js" defer></script>
 </head>
 <body>
     <header>
@@ -53,10 +56,13 @@ if ($result) {
             <label for="part_name">Part Name:</label>
             <input type="text" id="part_name" name="part_name" required>
             <label for="description">Description:</label>
-            <textarea id="description" name="description" required></textarea>
+            <input type="text" id="description" name="description" required>
             <label for="price">Price:</label>
             <input type="number" step="0.01" id="price" name="price" required>
             <button type="submit" name="add_part">Add Part</button>
+            <?php if (isset($error)): ?>
+                <p class="error"><?php echo htmlspecialchars($error); ?></p>
+            <?php endif; ?>
         </form>
         <h2>Existing Parts</h2>
         <table>
@@ -77,7 +83,7 @@ if ($result) {
                         <td><?php echo htmlspecialchars($part['description']); ?></td>
                         <td><?php echo htmlspecialchars($part['price']); ?></td>
                         <td>
-                            <a href="delete_part.php?id=<?php echo $part['id']; ?>" class="delete-item">Delete</a>
+                            <a href="delete_part.php?id=<?php echo $part['id']; ?>" class="delete-item" data-item-type="part">Delete</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
