@@ -19,57 +19,71 @@ h1 {
 
 nav {
     background-color: #444;
-    padding: 10px;
-    text-align: center;
+    overflow: hidden;
 }
 
 nav a {
+    float: left;
+    display: block;
     color: #fff;
-    margin: 0 15px;
+    text-align: center;
+    padding: 14px 16px;
     text-decoration: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    transition: background-color 0.3s;
 }
 
 nav a:hover {
-    background-color: #555;
+    background-color: #ddd;
+    color: black;
 }
 
 .container {
-    max-width: 1200px;
-    margin: 20px auto;
     padding: 20px;
+}
+
+.card {
     background-color: #fff;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
-.main-img {
-    width: 100%;
-    height: auto;
+    border: 1px solid #ddd;
     border-radius: 5px;
-    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin: 20px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.2s;
 }
 
-ul {
-    list-style-type: disc;
-    padding-left: 20px;
+.card:hover {
+    transform: scale(1.05);
 }
 
-footer {
+.card img {
+    max-width: 100px;
+    margin-bottom: 10px;
+}
+
+.card h3 {
+    margin: 10px 0;
+}
+
+.card p {
+    color: #666;
+}
+
+.card .btn {
     background-color: #333;
     color: #fff;
-    text-align: center;
-    padding: 10px 0;
-    position: fixed;
-    width: 100%;
-    bottom: 0;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.card .btn:hover {
+    background-color: #555;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
+    margin: 20px 0;
 }
 
 table, th, td {
@@ -85,18 +99,16 @@ th {
     background-color: #f4f4f4;
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
-    .container {
-        padding: 10px;
-    }
+.error {
+    color: red;
+}
 
-    nav a {
-        display: block;
-        margin: 10px 0;
-    }
-
-    table, th, td {
-        font-size: 14px;
-    }
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
 }

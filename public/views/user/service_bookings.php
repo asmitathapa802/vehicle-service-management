@@ -48,41 +48,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['book_service'])) {
         <h1>Service Bookings</h1>
     </header>
     <nav>
-        <a href="dashboard.php">Dashboard</a>
+        <a href="../../index.php">Home</a>
         <a href="service_bookings.php">Service Bookings</a>
         <a href="../auth/logout.php">Logout</a>
     </nav>
     <div class="container">
-        <h2>Your Service Bookings</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Vehicle</th>
-                    <th>Status</th>
-                    <th>Created At</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($bookings as $booking): ?>
+        <div class="card">
+            <h3>Your Service Bookings</h3>
+            <table>
+                <thead>
                     <tr>
-                        <td><?php echo htmlspecialchars($booking['id']); ?></td>
-                        <td><?php echo htmlspecialchars($booking['vehicle']); ?></td>
-                        <td><?php echo htmlspecialchars($booking['status']); ?></td>
-                        <td><?php echo htmlspecialchars($booking['created_at']); ?></td>
+                        <th>ID</th>
+                        <th>Vehicle</th>
+                        <th>Status</th>
+                        <th>Created At</th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-        <h2>Book a New Service</h2>
-        <form method="POST" action="service_bookings.php">
-            <label for="vehicle">Vehicle:</label>
-            <input type="text" id="vehicle" name="vehicle" required>
-            <button type="submit" name="book_service">Book Service</button>
-            <?php if (isset($error)): ?>
-                <p class="error"><?php echo htmlspecialchars($error); ?></p>
-            <?php endif; ?>
-        </form>
+                </thead>
+                <tbody>
+                    <?php foreach ($bookings as $booking): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($booking['id']); ?></td>
+                            <td><?php echo htmlspecialchars($booking['vehicle']); ?></td>
+                            <td><?php echo htmlspecialchars($booking['status']); ?></td>
+                            <td><?php echo htmlspecialchars($booking['created_at']); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <div class="card">
+            <h3>Book a New Service</h3>
+            <form method="POST" action="service_bookings.php">
+                <label for="vehicle">Vehicle:</label>
+                <input type="text" id="vehicle" name="vehicle" required>
+                <button type="submit" name="book_service">Book Service</button>
+                <?php if (isset($error)): ?>
+                    <p class="error"><?php echo htmlspecialchars($error); ?></p>
+                <?php endif; ?>
+            </form>
+        </div>
     </div>
+    <footer>
+    <p>&copy; 2025 Vehicle Service Management. All rights reserved.</p>
+    </footer>
 </body>
 </html>

@@ -9,115 +9,40 @@ class UserAuthController {
         $this->conn = $conn;
     }
 
-    public function register($username, $password, $email) {
-        $username = $this->sanitizeInput($username);
-        $password = $this->sanitizeInput($password);
-        $email = $this->sanitizeInput($email);
-
-        // Check if username or email already exists
-        $stmt = $this->conn->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
-        if (!$stmt) {
-            error_log("Prepare failed: (" . $this->conn->errno . ") " . $this->conn->error);
-            return false;
-        }
-        $stmt->bind_param("ss", $username, $email);
-        $stmt->execute();
-        $stmt->store_result();
-
-        if ($stmt->num_rows > 0) {
-            $stmt->close();
-            return false; // Username or email already exists
-        }
-        $stmt->close();
-
-        // Insert new user with plain text password
-        $stmt = $this->conn->prepare("INSERT INTO users (username, password, email) VALUES (?, ?, ?)");
-        if (!$stmt) {
-            error_log("Prepare failed: (" . $this->conn->errno . ") " . $this->conn->error);
-            return false;
-        }
-        $stmt->bind_param("sss", $username, $password, $email);
-        $stmt->execute();
-        $stmt->close();
-
-        return true;
-    }
-
-    public function login($username, $password) {
-        $username = $this->sanitizeInput($username);
-        $password = $this->sanitizeInput($password);
-
-        $stmt = $this->conn->prepare("SELECT id, password FROM users WHERE username = ?");
-        if (!$stmt) {
-            error_log("Prepare failed: (" . $this->conn->errno . ") " . $this->conn->error);
-            return false;
-        }
-
+    public function isUserRegistered($username) {
+        $stmt = $this->conn->prepare("SELECT id FROM users WHERE username = ?");
         $stmt->bind_param("s", $username);
         $stmt->execute();
         $stmt->store_result();
+        $isRegistered = $stmt->num_rows > 0;
+        $stmt->close();
+        return $isRegistered;
+    }
 
-        if ($stmt->num_rows == 1) {
-            $stmt->bind_result($id, $stored_password);
-            $stmt->fetch();
-
-            if ($password === $stored_password) { // Plain text password comparison
-                if (session_status() == PHP_SESSION_NONE) {
-                    session_start();
-                }
-                $_SESSION['user_logged_in'] = true;
-                $_SESSION['user_id'] = $id;
-                $stmt->close();
-                return true;
-            } else {
-                $stmt->close();
-                return false;
-            }
-        } else {
+    public function login($username, $password) {
+        $stmt = $this->conn->prepare("SELECT id, password FROM users WHERE username = ?");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $stmt->bind_result($user_id, $stored_password);
+        if ($stmt->fetch() && $password === $stored_password) {
+            $_SESSION['user_logged_in'] = true;
+            $_SESSION['user_id'] = $user_id;
             $stmt->close();
-            return false;
+            return true;
         }
+        $stmt->close();
+        return false;
     }
 
-    public function logout() {
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
+    public function register($username, $password, $email) {
+        if ($this->isUserRegistered($username)) {
+            return false; // User already registered
         }
-        session_unset();
-        session_destroy();
-    }
-
-    private function sanitizeInput($input) {
-        return htmlspecialchars(strip_tags(trim($input)));
-    }
-}
-
-// Usage example for registration
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
-    $authController = new UserAuthController();
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-    $email = $_POST['email'];
-
-    if ($authController->register($username, $password, $email)) {
-        header("Location: login.php");
-        exit;
-    } else {
-        echo "Registration failed. Please try again.";
-    }
-}
-
-// Usage example for login
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
-    $authController = new UserAuthController();
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-
-    if ($authController->login($username, $password)) {
-        header("Location: ../user/dashboard.php");
-        exit;
-    } else {
-        echo "<script>alert('Login failed. Please try again.');</script>";
+        $stmt = $this->conn->prepare("INSERT INTO users (username, password, email) VALUES (?, ?, ?)");
+        $stmt->bind_param("sss", $username, $password, $email);
+        $result = $stmt->execute();
+        $stmt->close();
+        return $result;
     }
 }
 ?>
