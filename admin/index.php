@@ -4,6 +4,24 @@ if (!isset($_SESSION['admin_logged_in'])) {
     header('Location: admin_login.php');
     exit();
 }
+
+// Database connection
+$host = 'localhost';
+$dbname = 'asmitadb';
+$username = 'root';
+$password = '';
+
+try {
+    $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+
+// Fetch data from the database
+$totalParts = $conn->query("SELECT COUNT(*) as total FROM parts")->fetchColumn();
+$totalUsers = $conn->query("SELECT COUNT(*) as total FROM users")->fetchColumn();
+$totalBookings = $conn->query("SELECT COUNT(*) as total FROM service_bookings")->fetchColumn();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -84,7 +102,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
             background-color: #333;
             color: #fff;
             text-align: center;
-            padding: 10px 0;
+            padding: 1px 0;
             position: fixed;
             width: 100%;
             bottom: 0;
@@ -108,28 +126,23 @@ if (!isset($_SESSION['admin_logged_in'])) {
         <div class="dashboard-cards">
             <div class="card">
                 <h3>Manage Parts</h3>
-                <p>Add, edit, and delete vehicle parts.</p>
+                <p>Total Parts: <?php echo $totalParts; ?></p>
                 <a href="manage_parts.php" class="btn">Go to Parts</a>
             </div>
             <div class="card">
                 <h3>View Users</h3>
-                <p>View and manage users.</p>
+                <p>Total Users: <?php echo $totalUsers; ?></p>
                 <a href="view_users.php" class="btn">Go to Users</a>
             </div>
             <div class="card">
                 <h3>Service Bookings</h3>
-                <p>View and manage service bookings.</p>
+                <p>Total Bookings: <?php echo $totalBookings; ?></p>
                 <a href="manage_service_bookings.php" class="btn">Go to Bookings</a>
             </div>
         </div>
     </div>
-    <div>
-        <h2>Contact Information</h2>
-        <p>Email: asmitathapa@gmail.com</p>
-        <p>Phone: +977 9876543210</p>
-        <p>Address: Damak-8, Jhapa, Nepal</p>
-    </div>
-        <footer>
+    
+    <footer>
         <p>&copy; 2025 Vehicle Service Management. All rights reserved.</p>
     </footer>
 </body>
